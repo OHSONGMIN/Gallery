@@ -44,9 +44,12 @@ export default {
 
         //로그인 하게 되면 1번 or 10번 같은 id를 Vuex 즉 store에 저장하고 싶음
         store.commit("setAccount", res.data);
+        sessionStorage.setItem("id", res.data); //sessionStorage에 id값 보관
         router.push({path: "/"});
         window.alert("로그인하였습니다.");
-      });
+      }).catch(() => {
+        window.alert("로그인 정보가 존재하지않습니다.")
+      })
     };
 
     return {state, submit}
