@@ -15,5 +15,14 @@ public class Item { //Table과 class를 연결
     @Column(length = 50, nullable = false)
     private String name;
 
+    @Column(length = 100)
+    private String imgPath;
+
+    @Column
+    private Integer price;
+
+    @Column
+    private Integer discountPer;
+
     //이 class가 데이터베이스의 items라고 하는 table과 맵핑이 되도록 하는 작업...
 }
