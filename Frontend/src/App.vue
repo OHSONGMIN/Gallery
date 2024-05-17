@@ -8,6 +8,9 @@
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import store from "@/scripts/store";
+import axios from "axios";
+import {useRoute} from "vue-router";
+import {watch} from "vue";
 
 export default {
   name: 'App',
@@ -16,11 +19,29 @@ export default {
     Header
   },
   setup() {
-    const id = sessionStorage.getItem("id");
+    const check = () => {
+      axios.get("/api/accout/check").then(({data})=> {
+        console.log(data);
 
-    if(id) {
-      store.commit("setAccount", id);
-    }
+        /* if ~ else문 대신 축약 가능 */
+        store.commit("setAccount", data || 0);
+
+        /*
+        if(data) { //data값이 있으면
+          store.commit("setAccount", data);
+        }
+        else {
+          store.commit("setAccount", 0);
+        }
+        */
+      })
+    };
+
+    const route = useRoute(); //url에 관련된 정보를 가져옴
+
+    watch(route, () => {
+      check();
+    }) //경로가 바뀔 때마다 감시, check()를 실행해라
   }
 }
 </script>
