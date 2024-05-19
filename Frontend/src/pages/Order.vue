@@ -11,7 +11,9 @@
               class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-primary">구입 목록</span>
             <span
-                class="badge bg-primary rounded-pill"></span></h4>
+                class="badge bg-primary rounded-pill">
+              {{state.items.length}}
+            </span></h4>
             <ul class="list-group mb-3">
               <li class="list-group-item d-flex justify-content-between lh-sm" v-for="(i, idx) in state.items"
                   :key="idx">
@@ -34,12 +36,14 @@
                   <input type="text"
                          class="form-control"
                          id="username"
+                         v-model="state.form.name"
                   >
                 </div>
                 <div class="col-12"><label for="address" class="form-label">주소</label>
                   <input type="text"
                          class="form-control"
-                         id="address">
+                         id="address"
+                         v-model="state.form.address">
                 </div>
               </div>
               <hr class="my-4">
@@ -47,21 +51,24 @@
               <div class="my-3">
                 <div class="form-check">
                   <input id="card" name="paymentMethod" type="radio" class="form-check-input"
-                         value="card">
+                         value="card"
+                         v-model="state.form.payment">
                   <label class="form-check-label" for="card">신용카드
                   </label></div>
                 <div class="form-check">
                   <input id="bank" name="paymentMethod" type="radio" class="form-check-input"
-                         value="bank">
+                         value="bank"
+                         v-model="state.form.payment">
                   <label class="form-check-label" for="bank">무통장입금</label>
                 </div>
               </div>
               <label for="cc-name" class="form-label">카드 번호</label>
               <input type="text"
                      class="form-control"
-                     id="cc-name">
+                     id="cc-name"
+                     v-model="state.form.cardNumber">
               <hr class="my-4">
-              <button class="w-100 btn btn-primary btn-lg">결제하기</button>
+              <button class="w-100 btn btn-primary btn-lg" @click="submit">결제하기</button>
             </div>
           </div>
         </div>
@@ -79,7 +86,14 @@ import lib from "@/scripts/lib";
 export default {
   setup() {
     const state = reactive({
-      items: []
+      items: [],
+      form: {
+        name: "",
+        address: "",
+        payment: "",
+        cardNumber: "",
+        items: "",
+      }
     })
 
     const load = () => {
@@ -89,6 +103,17 @@ export default {
         state.items = data;
       })
     };
+
+    const submit = () => {
+      //const args = state.form; //에서 state.form과 args둘 사이의 연결고리를 끊기 위해서 아래와 같이 설정
+      //왜 끊냐면.... items을 추가하면서 바뀌었기 때문에... 참조값이기 떄문에...
+      const args = JSON.parse(JSON.stringify(state.form)); //사실 굳이 안해도 되지만 이게 더 좋음
+      args.items = JSON.stringify(state.items); //state.items를 JSON으로 만들어준 것을 args.items에 넣어줄 것임
+
+      axios.post("/api/orders", args).then(() => {
+        console.log("success");
+      })
+    }
 
     const computedPrice = computed(() => {
       let result = 0;
@@ -102,7 +127,7 @@ export default {
 
     load();
 
-    return {state, lib, computedPrice}
+    return {state, lib, computedPrice, submit}
   }
 }
 </script>
