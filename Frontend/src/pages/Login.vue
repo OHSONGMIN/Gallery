@@ -4,17 +4,20 @@
 
     <div class="form-floating">
       <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+             @keyup.enter="submit()"
              v-model="state.form.email">
       <label for="floatingInput">Email address</label>
     </div>
     <div class="form-floating">
       <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+             @keyup.enter="submit()"
              v-model="state.form.password">
       <label for="floatingPassword">Password</label>
     </div>
 
     <div class="form-check text-start my-3">
-      <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault"
+             @keyup.enter="submit()">
       <label class="form-check-label" for="flexCheckDefault">
         Remember me
       </label>
@@ -41,8 +44,8 @@ export default {
 
     const submit = () => {
       axios.post("/api/account/login", state.form).then((res) => {
-
         //로그인 하게 되면 1번 or 10번 같은 id를 Vuex 즉 store에 저장하고 싶음
+
         store.commit("setAccount", res.data);
         sessionStorage.setItem("id", res.data); //sessionStorage에 id값 보관
         router.push({path: "/"});
