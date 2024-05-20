@@ -22,7 +22,7 @@ public class JwtServiceImpl implements JwtService {
          * 만들어주는 메서드
          */
         Date expTime = new Date();
-        expTime.setTime(expTime.getTime() + 1000 * 60 * 5);
+        expTime.setTime(expTime.getTime() + 1000 * 60 * 30);
         //Jave 8까지만 지원
         //byte[] secretByteKey = DatatypeConverter.parseBase64Binary(secretKey);
         String base64EncodedSecretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
